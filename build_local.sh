@@ -14,14 +14,14 @@ fi
 ROOT_DIRECTORY="$( cd `dirname $0`; pwd -P )"
 mkdir -p $ROOT_DIRECTORY/build
 cd "$ROOT_DIRECTORY/build"
-#cmake $ROOT_DIRECTORY "$@"
-#make -j$MAKE_NCPUS
-#make install
+cmake $ROOT_DIRECTORY "$@"
+make -j$MAKE_NCPUS
+make install
 
 ## remove patch version if MacOS
 if [[ "$(uname)" == "Darwin" ]]; then
     cd lib
-    for file in *.so*; do
+    for file in *.dylib; do
       if [[ ! -L $file ]]; then
         version=$( echo $file | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+' )  # full version number with patch
         soversion=$( echo $version | sed 's/\.[0-9]$//' )  # remove patch
