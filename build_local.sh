@@ -22,12 +22,11 @@ cd "$ROOT_DIRECTORY/build"
 if [[ "$(uname)" == "Darwin" ]]; then
     cd lib
     for file in *.so*; do
-      if [[ -L $file ]]
-        then rm $file
-      else
+      if [[ ! -L $file ]]; then
         version=$( echo $file | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+' )  # full version number with patch
         soversion=$( echo $version | sed 's/\.[0-9]$//' )  # remove patch
         newName=$( echo ${file//$version/$soversion} )  # new soname
+        echo "renaming $file to $newName"
         mv "$file" "$newName"
       fi
     done
